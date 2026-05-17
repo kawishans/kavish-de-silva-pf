@@ -23,6 +23,13 @@ function applyThemeToRoot({ isDark, primary, secondary }) {
   root.classList.toggle('dark', isDark);
   root.style.setProperty('--color-primary', primary);
   root.style.setProperty('--color-secondary', secondary);
+
+  // Dynamic theme-aware favicon switcher
+  const favicon = document.querySelector('link[rel="icon"]');
+  if (favicon) {
+    favicon.type = 'image/x-icon';
+    favicon.href = isDark ? '/W_favicon.ico' : '/B_favicon.ico';
+  }
 }
 
 export function ThemeProvider({ children }) {

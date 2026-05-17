@@ -195,7 +195,7 @@
   }
 
   .animate-marquee {
-    animation: marquee 35s linear infinite;
+    animation: marquee 45s linear infinite;
   }
 
   @keyframes marquee {

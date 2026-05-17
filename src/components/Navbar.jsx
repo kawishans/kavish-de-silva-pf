@@ -42,7 +42,7 @@ export default function Navbar() {
             />
           </NavLink>
 
-          <ul className="hidden md:flex items-center gap-1">
+          <ul className="hidden md:flex items-center gap-5 lg:gap-6">
             {navLinks.map((link) => (
               <li key={link.to}>
                 <NavLink to={link.to} end={link.end} className={linkClass}>

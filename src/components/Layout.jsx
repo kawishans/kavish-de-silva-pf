@@ -1,4 +1,5 @@
-import { Outlet } from 'react-router-dom';
+import { useEffect } from 'react';
+import { Link, Outlet, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import Navbar from './Navbar.jsx';
 import { usePortfolio } from '../context/PortfolioContext.jsx';
@@ -76,6 +77,28 @@ function getSocialIcon(iconName) {
 export default function Layout() {
   const { socialLinks } = usePortfolio();
   const year = new Date().getFullYear();
+  const location = useLocation();
+
+  useEffect(() => {
+    const path = location.pathname;
+    let title = 'Kavish De Silva | Portfolio';
+
+    if (path.startsWith('/music')) {
+      title = 'Kavish De Silva | Music';
+    } else if (path.startsWith('/design')) {
+      title = 'Kavish De Silva | Design';
+    } else if (path.startsWith('/tools')) {
+      title = 'Kavish De Silva | Tools';
+    } else if (path.startsWith('/contact')) {
+      title = 'Kavish De Silva | Contact';
+    } else if (path.startsWith('/login')) {
+      title = 'Kavish De Silva | Login';
+    } else if (path.startsWith('/admin')) {
+      title = 'Kavish De Silva | Admin Dashboard';
+    }
+
+    document.title = title;
+  }, [location]);
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -117,6 +140,28 @@ export default function Layout() {
           </ul>
         </div>
       </footer>
+
+      {/* Global Floating Contact Icon */}
+      <div className="fixed bottom-6 right-6 z-50">
+        <Link to="/contact">
+          <motion.div
+            className="w-14 h-14 rounded-full flex items-center justify-center shadow-xl bg-[var(--color-primary)] text-neutral-950 hover:bg-[var(--color-primary)]/90 transition-all duration-300 relative group cursor-pointer"
+            whileHover={{ scale: 1.12, y: -4 }}
+            whileTap={{ scale: 0.92 }}
+            aria-label="Contact Kavish"
+          >
+            {/* Pulsing ring around button */}
+            <span className="absolute -inset-1.5 rounded-full border-2 border-[var(--color-primary)]/40 animate-ping opacity-75 -z-10" />
+            
+            {/* Glowing blur under button */}
+            <span className="absolute inset-0 rounded-full bg-[var(--color-primary)]/40 blur-md group-hover:blur-lg transition-all -z-10" />
+
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+            </svg>
+          </motion.div>
+        </Link>
+      </div>
     </div>
   );
 }
