@@ -1,0 +1,209 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── Local font faces (served from /public/fonts) ───────────────────────────
+   Original asset paths on disk:
+   - Space: D:\DEV\VS Code\kds pf site\my assets\fonts\Space
+   - IBM:   D:\DEV\VS Code\kds pf site\my assets\fonts\IBM
+   Update url() paths here if you relocate font files.
+*/
+
+@font-face {
+  font-family: 'Space';
+  src: url('/fonts/Space/SpaceGrotesk-VariableFont_wght.ttf') format('truetype');
+  font-weight: 300 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Space';
+  src: url('/fonts/Space/static/SpaceGrotesk-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Space';
+  src: url('/fonts/Space/static/SpaceGrotesk-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Space';
+  src: url('/fonts/Space/static/SpaceGrotesk-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Space';
+  src: url('/fonts/Space/static/SpaceGrotesk-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'IBM';
+  src: url('/fonts/IBM/IBMPlexMono-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'IBM';
+  src: url('/fonts/IBM/IBMPlexMono-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'IBM';
+  src: url('/fonts/IBM/IBMPlexMono-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@layer base {
+  :root {
+    --color-primary: #00e0d5;
+    --color-secondary: #ffc200;
+
+  /* Light theme surface tokens */
+    --bg-base: #f4f7fb;
+    --bg-mesh: radial-gradient(ellipse 80% 60% at 10% 20%, color-mix(in srgb, var(--color-primary) 18%, transparent), transparent),
+      radial-gradient(ellipse 70% 50% at 90% 10%, color-mix(in srgb, var(--color-secondary) 22%, transparent), transparent),
+      radial-gradient(ellipse 60% 70% at 50% 100%, color-mix(in srgb, var(--color-primary) 12%, transparent), transparent),
+      linear-gradient(160deg, #eef2f8 0%, #f8fafc 45%, #e8edf5 100%);
+    --text-base: #0f172a;
+    --text-muted: #64748b;
+    --glass-bg: rgba(255, 255, 255, 0.55);
+    --glass-border: rgba(255, 255, 255, 0.65);
+  }
+
+  .dark {
+    --bg-base: #0a0e17;
+    --bg-mesh: radial-gradient(ellipse 80% 60% at 15% 15%, color-mix(in srgb, var(--color-primary) 14%, transparent), transparent),
+      radial-gradient(ellipse 70% 50% at 85% 25%, color-mix(in srgb, var(--color-secondary) 12%, transparent), transparent),
+      radial-gradient(ellipse 55% 65% at 50% 95%, color-mix(in srgb, var(--color-primary) 8%, transparent), transparent),
+      linear-gradient(165deg, #060912 0%, #0c1220 50%, #080d16 100%);
+    --text-base: #f1f5f9;
+    --text-muted: #94a3b8;
+    --glass-bg: rgba(0, 0, 0, 0.35);
+    --glass-border: rgba(255, 255, 255, 0.08);
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply font-space antialiased min-h-screen text-[var(--text-base)];
+    background-color: var(--bg-base);
+    background-image: var(--bg-mesh);
+    background-attachment: fixed;
+    transition: background-color 0.4s ease, color 0.3s ease;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-space tracking-tight;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply backdrop-blur-md bg-white/10 dark:bg-black/20 border border-white/10 dark:border-white/5 shadow-xl rounded-2xl;
+  }
+
+  .glass-panel {
+    @apply backdrop-blur-lg border shadow-xl rounded-2xl;
+    background: var(--glass-bg);
+    border-color: var(--glass-border);
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center px-5 py-2.5 rounded-xl font-medium transition-all duration-300;
+    background: color-mix(in srgb, var(--color-primary) 90%, #000 10%);
+    color: #0a0e17;
+  }
+
+  .btn-primary:hover {
+    filter: brightness(1.08);
+    box-shadow: 0 8px 24px color-mix(in srgb, var(--color-primary) 35%, transparent);
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center px-4 py-2 rounded-xl border border-white/20 dark:border-white/10
+      text-[var(--text-base)] hover:bg-white/10 dark:hover:bg-white/5 transition-all duration-300;
+  }
+
+  .section-title {
+    @apply text-3xl md:text-4xl font-space font-semibold;
+  }
+
+  .section-subtitle {
+    @apply font-ibm text-[var(--text-muted)] max-w-2xl;
+  }
+
+  .text-description {
+    @apply font-ibm;
+  }
+
+  .btn-primary,
+  .btn-ghost {
+    @apply font-space;
+  }
+
+  /* Hero CTAs: button shape, no border stroke */
+  .btn-hero {
+    @apply inline-flex items-center justify-center px-6 py-2.5 rounded-xl font-space font-medium
+      transition-all duration-300 border-0 outline-none;
+  }
+
+  .btn-hero-primary {
+    @apply btn-hero bg-primary text-slate-900 hover:brightness-110;
+  }
+
+  .btn-hero-secondary {
+    @apply btn-hero bg-white/15 text-white hover:bg-white/25;
+  }
+}
+
+@layer utilities {
+  .marquee-mask {
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      black 8%,
+      black 92%,
+      transparent
+    );
+  }
+
+  .animate-marquee {
+    animation: marquee 35s linear infinite;
+  }
+
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+}
