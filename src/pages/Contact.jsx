@@ -51,7 +51,7 @@ export default function Contact() {
           <div className="overflow-hidden rounded-xl bg-black/10 aspect-[4/3] relative group shadow-lg border border-white/10 dark:border-white/5">
             <img
               src="/assets/images/Contact.jpg"
-              alt="Kavish De Silva Studio"
+              alt="Kavish De Silva - Music Producer and Vocalist Studio Session"
               className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-500"
               loading="lazy"
             />
