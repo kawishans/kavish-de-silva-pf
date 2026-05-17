@@ -1,34 +1,7 @@
 {
-  "generatedAt": "2026-05-17T19:12:04.229Z",
-  "videos": [
-    "/assets/videos/Banner.mp4"
-  ],
-  "clients": [
-    "/assets/clients/Logo-01.png",
-    "/assets/clients/Logo-02.png",
-    "/assets/clients/Logo-03.png",
-    "/assets/clients/Logo-04.png",
-    "/assets/clients/Logo-05.png",
-    "/assets/clients/Logo-06.png",
-    "/assets/clients/Logo-07.png",
-    "/assets/clients/Logo-08.png",
-    "/assets/clients/Logo-09.png",
-    "/assets/clients/Logo-10.png",
-    "/assets/clients/Logo-11.png",
-    "/assets/clients/Logo-12.png",
-    "/assets/clients/Logo.png"
-  ],
-  "images": [
-    "/assets/images/Contact.jpg",
-    "/assets/images/me%20me.jpg",
-    "/assets/images/me%20me%2002.jpg"
-  ],
-  "pfItems": [
-    "/assets/pf-items/607168045_4341623235983992_4210058115332689022_n.jpg",
-    "/assets/pf-items/Black%20and%20Gold%20Modern%20Birthday%20Greetings%20Instagram%20Post.png",
-    "/assets/pf-items/Project%2001/SnapInsta.to_AQOj8VMBCf5sVS4XmEiwtHj5yynPYhoIc_40ihHR2UjShjGDs2FJORLk2v3yPJ-HA0PYcS1PVvjJccL171xMjoPXhuXzxZg9RfKHJFc.mp4",
-    "/assets/pf-items/SnapInsta.to_AQOj8VMBCf5sVS4XmEiwtHj5yynPYhoIc_40ihHR2UjShjGDs2FJORLk2v3yPJ-HA0PYcS1PVvjJccL171xMjoPXhuXzxZg9RfKHJFc.mp4",
-    "/assets/pf-items/snaptik_7623386430391323911_v3.mp4",
-    "/assets/pf-items/Wait%20for%20the%20Beat%20Drop.%20%F0%9F%94%A5.mp4"
-  ]
+  "generatedAt": "2026-05-17T19:46:01.541Z",
+  "videos": [],
+  "clients": [],
+  "images": [],
+  "pfItems": []
 }
