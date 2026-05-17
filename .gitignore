@@ -5,3 +5,10 @@ dist
 .env
 .env.local
 .env.*
+
+# Adobe raw design assets
+adobe assets/
+
+# Duplicated client marquee logos
+my assets/Clients/* - Copy*
+public/assets/clients/* - Copy*
