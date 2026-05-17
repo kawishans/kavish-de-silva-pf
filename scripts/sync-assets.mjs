@@ -61,7 +61,39 @@ function copyDir(relFrom, relTo, filter, recursive = false) {
   return copied.sort((a, b) => a.localeCompare(b));
 }
 
-syncLogos();
+function scanDir(relTo, filter, recursive = false) {
+  const toDir = join(publicRoot, relTo);
+  if (!existsSync(toDir)) return [];
+
+  const found = [];
+
+  function walk(currentTo, baseRel = '') {
+    for (const name of readdirSync(currentTo)) {
+      const dest = join(currentTo, name);
+      const relPath = baseRel ? `${baseRel}/${name}` : name;
+
+      if (statSync(dest).isDirectory()) {
+        if (recursive) {
+          walk(dest, relPath);
+        }
+        continue;
+      }
+
+      if (!filter(name)) continue;
+      const urlPath = relPath.split('/').map(encodeURIComponent).join('/');
+      found.push(`/assets/${relTo}/${urlPath}`);
+    }
+  }
+
+  walk(toDir);
+  return found.sort((a, b) => a.localeCompare(b));
+}
+
+const hasSrc = existsSync(srcRoot);
+
+if (hasSrc) {
+  syncLogos();
+}
 
 const manifest = { generatedAt: new Date().toISOString(), videos: [], clients: [], images: [], pfItems: [] };
 
@@ -69,9 +101,15 @@ for (const { from, to, filter } of mappings) {
   const key =
     to === 'videos' ? 'videos' : to === 'clients' ? 'clients' : to === 'images' ? 'images' : 'pfItems';
   const recursive = to === 'pf-items';
-  manifest[key] = copyDir(from, to, filter, recursive);
+  
+  if (hasSrc) {
+    manifest[key] = copyDir(from, to, filter, recursive);
+  } else {
+    manifest[key] = scanDir(to, filter, recursive);
+  }
 }
 
 mkdirSync(join(root, 'src', 'generated'), { recursive: true });
 writeFileSync(join(root, 'src', 'generated', 'assetManifest.json'), JSON.stringify(manifest, null, 2));
 console.log('Assets synced:', manifest);
+
