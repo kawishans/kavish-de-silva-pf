@@ -1,9 +1,17 @@
-/** Parse YouTube / SoundCloud / Spotify URLs and embed codes for iframes */
+/** Parse YouTube / SoundCloud / Spotify URLs and embed codes for iframes and rewrite http to https securely */
 
 const SOUNDCLOUD_WIDGET = 'https://w.soundcloud.com/player/';
 
+export function ensureHttps(url) {
+  if (typeof url !== 'string') return url;
+  if (/^http:\/\//i.test(url)) {
+    return url.replace(/^http:\/\//i, 'https://');
+  }
+  return url;
+}
+
 export function parseEmbedUrl(input = '') {
-  const trimmed = input.trim();
+  const trimmed = ensureHttps(input.trim());
   if (!trimmed) return null;
 
   const iframeSrc = extractIframeSrc(trimmed);
@@ -50,28 +58,29 @@ function extractIframeSrc(html) {
 function parseSoundCloudWidgetSrc(widgetSrc) {
   try {
     const absolute = widgetSrc.startsWith('//') ? `https:${widgetSrc}` : widgetSrc;
-    const parsed = new URL(absolute.startsWith('http') ? absolute : `https://${absolute}`);
+    const parsed = new URL(absolute.startsWith('http') ? ensureHttps(absolute) : `https://${absolute}`);
     const trackUrl = parsed.searchParams.get('url');
     if (!trackUrl) return null;
-    return buildSoundCloudEmbed(trackUrl);
+    return buildSoundCloudEmbed(ensureHttps(trackUrl));
   } catch {
     return null;
   }
 }
 
 function normalizeSoundCloudTrackUrl(input) {
-  if (/api\.soundcloud\.com\/tracks/i.test(input)) {
+  const secureInput = ensureHttps(input);
+  if (/api\.soundcloud\.com\/tracks/i.test(secureInput)) {
     try {
-      const absolute = input.startsWith('http') ? input : `https://${input}`;
+      const absolute = secureInput.startsWith('http') ? secureInput : `https://${secureInput}`;
       return new URL(absolute).href;
     } catch {
-      return input;
+      return secureInput;
     }
   }
 
-  if (!/soundcloud\.com/i.test(input)) return null;
+  if (!/soundcloud\.com/i.test(secureInput)) return null;
 
-  let href = input;
+  let href = secureInput;
   if (!/^https?:\/\//i.test(href)) {
     href = `https://${href.replace(/^\/+/, '')}`;
   }
@@ -90,7 +99,7 @@ function normalizeSoundCloudTrackUrl(input) {
 
 function buildSoundCloudEmbed(trackUrl) {
   const params = new URLSearchParams({
-    url: trackUrl,
+    url: ensureHttps(trackUrl),
     color: '#00e0d5',
     auto_play: 'false',
     hide_related: 'false',
@@ -109,12 +118,13 @@ function buildSoundCloudEmbed(trackUrl) {
 }
 
 export function getYouTubeId(url) {
-  if (/soundcloud\.com/i.test(url) || /w\.soundcloud\.com/i.test(url) || /spotify\.com/i.test(url)) {
+  const secureUrl = ensureHttps(url);
+  if (/soundcloud\.com/i.test(secureUrl) || /w\.soundcloud\.com/i.test(secureUrl) || /spotify\.com/i.test(secureUrl)) {
     return null;
   }
 
   try {
-    const parsed = new URL(url.startsWith('http') ? url : `https://${url}`);
+    const parsed = new URL(secureUrl.startsWith('http') ? secureUrl : `https://${secureUrl}`);
     if (parsed.hostname.includes('youtu.be')) {
       return parsed.pathname.slice(1).split('/')[0];
     }
@@ -128,10 +138,10 @@ export function getYouTubeId(url) {
     // not a full URL
   }
 
-  const shortMatch = url.match(/youtu\.be\/([\w-]+)/);
+  const shortMatch = secureUrl.match(/youtu\.be\/([\w-]+)/);
   if (shortMatch) return shortMatch[1];
 
-  const idMatch = url.match(/(?:v=|\/embed\/)([\w-]{11})/);
+  const idMatch = secureUrl.match(/(?:v=|\/embed\/)([\w-]{11})/);
   return idMatch ? idMatch[1] : null;
 }
 

@@ -1,11 +1,12 @@
-import { mediaKindFromPath, parseEmbedUrl, getYouTubeId } from '../utils/embedUtils.js';
+import { mediaKindFromPath, parseEmbedUrl, getYouTubeId, ensureHttps } from '../utils/embedUtils.js';
 
 function resolveMediaSrc(src) {
   if (!src) return '';
-  if (src.startsWith('http') || src.startsWith('/') || src.startsWith('assets/')) {
-    return src.startsWith('assets/') ? `/${src}` : src;
+  const secureSrc = ensureHttps(src);
+  if (secureSrc.startsWith('http') || secureSrc.startsWith('/') || secureSrc.startsWith('assets/')) {
+    return secureSrc.startsWith('assets/') ? `/${secureSrc}` : secureSrc;
   }
-  return `/assets/pf_items/${src}`;
+  return `/assets/pf_items/${secureSrc}`;
 }
 
 export default function DesignMedia({
