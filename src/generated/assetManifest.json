@@ -1,7 +1,27 @@
 {
-  "generatedAt": "2026-05-17T20:04:09.735Z",
-  "videos": [],
-  "clients": [],
-  "images": [],
+  "generatedAt": "2026-05-17T20:16:18.435Z",
+  "videos": [
+    "/assets/videos/Banner.mp4"
+  ],
+  "clients": [
+    "/assets/clients/Logo-01.png",
+    "/assets/clients/Logo-02.png",
+    "/assets/clients/Logo-03.png",
+    "/assets/clients/Logo-04.png",
+    "/assets/clients/Logo-05.png",
+    "/assets/clients/Logo-06.png",
+    "/assets/clients/Logo-07.png",
+    "/assets/clients/Logo-08.png",
+    "/assets/clients/Logo-09.png",
+    "/assets/clients/Logo-10.png",
+    "/assets/clients/Logo-11.png",
+    "/assets/clients/Logo-12.png",
+    "/assets/clients/Logo.png"
+  ],
+  "images": [
+    "/assets/images/Contact.jpg",
+    "/assets/images/me%20me.jpg",
+    "/assets/images/me%20me%2002.jpg"
+  ],
   "pfItems": []
 }
