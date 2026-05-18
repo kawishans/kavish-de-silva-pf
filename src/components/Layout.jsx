@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, Outlet, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import Navbar from './Navbar.jsx';
@@ -47,6 +47,33 @@ export default function Layout() {
   const { socialLinks } = usePortfolio();
   const year = new Date().getFullYear();
   const location = useLocation();
+  const [bottomOffset, setBottomOffset] = useState(24);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const footerElement = document.querySelector('footer');
+      if (!footerElement) return;
+
+      const footerRect = footerElement.getBoundingClientRect();
+      const windowHeight = window.innerHeight;
+
+      if (footerRect.top < windowHeight) {
+        const visibleFooterHeight = windowHeight - footerRect.top;
+        setBottomOffset(visibleFooterHeight + 24);
+      } else {
+        setBottomOffset(24);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('resize', handleScroll);
+    handleScroll();
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
+    };
+  }, []);
 
   useEffect(() => {
     const path = location.pathname;
@@ -111,7 +138,10 @@ export default function Layout() {
       </footer>
 
       {/* Global Floating Contact Icon */}
-      <div className="fixed bottom-6 right-6 z-50">
+      <div 
+        className="fixed right-6 z-50"
+        style={{ bottom: `${bottomOffset}px` }}
+      >
         <Link to="/contact">
           <motion.div
             className="w-14 h-14 rounded-full flex items-center justify-center shadow-xl bg-[var(--color-primary)] text-neutral-950 hover:bg-[var(--color-primary)]/90 transition-all duration-300 relative group cursor-pointer"
