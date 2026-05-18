@@ -4,6 +4,46 @@ import { usePortfolio, defaultSocialLinks } from '../../context/PortfolioContext
 const inputClass =
   'w-full rounded-xl px-3 py-2 text-sm bg-white/10 dark:bg-black/20 border border-white/10 focus:outline-none focus:ring-2 focus:ring-primary/40 text-[var(--text-base)]';
 
+const getFaviconUrl = (url) => {
+  if (!url) return '';
+  try {
+    let cleanUrl = url.trim();
+    if (!/^https?:\/\//i.test(cleanUrl)) {
+      cleanUrl = 'https://' + cleanUrl;
+    }
+    const domain = new URL(cleanUrl).hostname;
+    return `https://www.google.com/s2/favicons?sz=64&domain=${domain}`;
+  } catch (e) {
+    return '';
+  }
+};
+
+const renderIcon = (url, platform, sizeClass = 'w-5 h-5') => {
+  const src = getFaviconUrl(url);
+  if (!src) {
+    return (
+      <svg className={sizeClass} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="10" />
+        <line x1="2" y1="12" x2="22" y2="12" />
+        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+      </svg>
+    );
+  }
+  return (
+    <img
+      src={src}
+      alt={platform}
+      className={`${sizeClass} object-contain rounded`}
+      onError={(e) => {
+        e.target.onerror = null;
+        e.target.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="%23888" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>';
+      }}
+      loading="lazy"
+    />
+  );
+};
+
+
 export default function ContactSocialsManager() {
   const {
     contactDetails,
@@ -56,7 +96,7 @@ export default function ContactSocialsManager() {
   };
 
   const handleSaveSocials = async () => {
-    // Clean up empty links, limit to 10, and assign sortOrder
+    // Clean up empty links, limit to 10, and assign sortOrder and icon
     const cleanedLinks = links
       .filter((l) => l.platform.trim() && l.url.trim())
       .slice(0, 10)
@@ -64,7 +104,7 @@ export default function ContactSocialsManager() {
         id: link.id,
         platform: link.platform.trim(),
         url: link.url.trim(),
-        icon: link.icon || 'other',
+        icon: 'favicon',
         sortOrder: idx,
       }));
 
@@ -238,6 +278,11 @@ export default function ContactSocialsManager() {
                   </button>
                 </div>
 
+                {/* Visual Icon Preview */}
+                <div className="w-10 h-10 rounded-xl bg-white/10 dark:bg-black/30 border border-white/10 dark:border-white/5 flex items-center justify-center text-[var(--color-primary)] shrink-0 animate-fade-in" title="Favicon Preview">
+                  {renderIcon(link.url, link.platform, 'w-5 h-5')}
+                </div>
+
                 {/* Input Fields */}
                 <div className="grid gap-3 grid-cols-1 md:grid-cols-12 flex-1">
                   {/* Platform Name */}
@@ -255,7 +300,7 @@ export default function ContactSocialsManager() {
                   </div>
 
                   {/* URL */}
-                  <div className="md:col-span-6">
+                  <div className="md:col-span-9">
                     <label className="block text-[10px] mb-1 font-space text-[var(--text-muted)] uppercase">
                       URL
                     </label>
@@ -266,29 +311,6 @@ export default function ContactSocialsManager() {
                       onChange={(e) => updateLink(link.id, 'url', e.target.value)}
                       placeholder="https://..."
                     />
-                  </div>
-
-                  {/* Icon choice */}
-                  <div className="md:col-span-3">
-                    <label className="block text-[10px] mb-1 font-space text-[var(--text-muted)] uppercase">
-                      Icon representation
-                    </label>
-                    <select
-                      className={inputClass}
-                      value={link.icon || 'other'}
-                      onChange={(e) => updateLink(link.id, 'icon', e.target.value)}
-                    >
-                      <option value="github">GitHub</option>
-                      <option value="linkedin">LinkedIn</option>
-                      <option value="instagram">Instagram</option>
-                      <option value="spotify">Spotify</option>
-                      <option value="soundcloud">SoundCloud</option>
-                      <option value="youtube">YouTube</option>
-                      <option value="twitter">Twitter / X</option>
-                      <option value="facebook">Facebook</option>
-                      <option value="behance">Behance</option>
-                      <option value="other">Generic Link / Globe</option>
-                    </select>
                   </div>
                 </div>
 
