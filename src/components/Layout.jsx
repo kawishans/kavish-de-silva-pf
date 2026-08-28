@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, Outlet, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import Navbar from './Navbar.jsx';
 import { usePortfolio } from '../context/PortfolioContext.jsx';
+import { useTheme } from '../context/ThemeContext.jsx';
 
 const getFaviconUrl = (url) => {
   if (!url) return '';
@@ -45,9 +46,34 @@ const renderIcon = (url, platform, sizeClass = 'w-5 h-5') => {
 
 export default function Layout() {
   const { socialLinks } = usePortfolio();
+  const { isDark, primaryColor, secondaryColor } = useTheme();
   const year = new Date().getFullYear();
   const location = useLocation();
   const [bottomOffset, setBottomOffset] = useState(24);
+  const vantaRef = useRef(null);
+
+  useEffect(() => {
+    let effect = null;
+    if (window.VANTA && window.THREE && vantaRef.current) {
+      const primaryInt = parseInt(primaryColor.replace('#', ''), 16);
+      effect = window.VANTA.HALO({
+        el: vantaRef.current,
+        mouseControls: true,
+        touchControls: true,
+        gyroControls: false,
+        minHeight: 200.00,
+        minWidth: 200.00,
+        baseColor: isDark ? 0x0f172a : primaryInt,
+        backgroundColor: isDark ? 0x030712 : 0xeff6ff,
+        amplitudeFactor: isDark ? 1.50 : 2.20,
+        size: isDark ? 1.50 : 2.00,
+        speed: 0.50
+      });
+    }
+    return () => {
+      if (effect) effect.destroy();
+    };
+  }, [isDark, primaryColor, secondaryColor]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -97,45 +123,50 @@ export default function Layout() {
   }, [location]);
 
   return (
-    <div className="flex min-h-screen flex-col">
-      <Navbar />
+    <div className="flex min-h-screen flex-col relative z-0" style={{ backgroundColor: 'var(--bg-base)' }}>
+      <div ref={vantaRef} id="vanta-bg" />
 
-      <motion.main
-        className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12"
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, ease: 'easeOut' }}
-      >
-        <Outlet />
-      </motion.main>
+      {/* Main content wrapper positioned above the Vanta background */}
+      <div className="relative z-10 flex flex-col min-h-screen">
+        <Navbar />
 
-      <footer
-        className="mt-auto border-t border-white/10 dark:border-white/5
-          backdrop-blur-md bg-white/5 dark:bg-black/20"
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-sm text-[var(--text-muted)]">
-            © {year} KDS Portfolio. All rights reserved.
-          </p>
-          <ul className="flex flex-wrap items-center gap-3">
-            {socialLinks.map((link) => (
-              <li key={link.id}>
-                <a
-                  href={link.url}
-                  className="w-9 h-9 inline-flex items-center justify-center rounded-xl border border-white/10 dark:border-white/5 bg-white/5 dark:bg-black/20 text-[var(--text-muted)] hover:text-primary hover:border-primary/30 hover:bg-primary/10 transition-all duration-300 group"
-                  target="_blank"
-                  rel="noreferrer"
-                  title={link.platform}
-                >
-                  <span className="group-hover:scale-110 transition-transform duration-300 flex items-center justify-center">
-                    {renderIcon(link.url, link.platform, 'w-5 h-5')}
-                  </span>
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </footer>
+        <motion.main
+          className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12"
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, ease: 'easeOut' }}
+        >
+          <Outlet />
+        </motion.main>
+
+        <footer
+          className="mt-auto border-t border-white/10 dark:border-white/5
+            backdrop-blur-md bg-white/5 dark:bg-black/20"
+        >
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <p className="text-sm text-[var(--text-muted)]">
+              © {year} KDS Portfolio. All rights reserved.
+            </p>
+            <ul className="flex flex-wrap items-center gap-3">
+              {socialLinks.map((link) => (
+                <li key={link.id}>
+                  <a
+                    href={link.url}
+                    className="w-9 h-9 inline-flex items-center justify-center rounded-xl border border-white/10 dark:border-white/5 bg-white/5 dark:bg-black/20 text-[var(--text-muted)] hover:text-primary hover:border-primary/30 hover:bg-primary/10 transition-all duration-300 group"
+                    target="_blank"
+                    rel="noreferrer"
+                    title={link.platform}
+                  >
+                    <span className="group-hover:scale-110 transition-transform duration-300 flex items-center justify-center">
+                      {renderIcon(link.url, link.platform, 'w-5 h-5')}
+                    </span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </footer>
+      </div>
 
       {/* Global Floating Contact Icon */}
       <div 
